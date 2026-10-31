@@ -1,0 +1,685 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Favourites | MiniCatalogue</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+          rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #C8753E;
+            --primary-dark: #91451F;
+            --page: #F5F1ED;
+            --dark: #292725;
+            --text: #302B28;
+            --muted: #81766E;
+            --border: #E5D9D0;
+            --danger: #C0392B;
+            --success: #218838;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--page);
+            color: var(--text);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .topbar {
+            background: white;
+            padding: 18px 4%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, .05);
+        }
+
+        .navbar-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            color: var(--primary);
+            font-size: 25px;
+            font-weight: 800;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .count-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 23px;
+            height: 23px;
+            padding: 0 6px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50px;
+            font-size: 12px;
+        }
+
+        .page-container {
+            max-width: 1350px;
+            margin: 45px auto;
+            padding: 0 25px;
+            min-height: 400px;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .page-subtitle {
+            color: var(--muted);
+            font-size: 17px;
+            margin-bottom: 25px;
+        }
+
+        .message {
+            color: var(--muted);
+            margin-bottom: 20px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px;
+        }
+
+        .product-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform .2s, box-shadow .2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 22px rgba(0, 0, 0, .08);
+        }
+
+        .product-image {
+            height: 220px;
+            background: linear-gradient(145deg, #FAF7F4, #EFE5DC);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .placeholder {
+            font-size: 60px;
+            color: #B8A69A;
+        }
+
+        .product-details {
+            padding: 20px;
+        }
+
+        .product-name {
+            font-size: 19px;
+            font-weight: 800;
+            overflow-wrap: anywhere;
+            margin-bottom: 10px;
+        }
+
+        .category {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .description {
+            color: #6D625B;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            overflow-wrap: anywhere;
+        }
+
+        .price {
+            color: var(--primary-dark);
+            font-size: 23px;
+            font-weight: 800;
+            margin-bottom: 18px;
+        }
+
+        .button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 14px;
+            transition: background .2s;
+        }
+
+        .view-button {
+            background: #F0E4D8;
+            color: var(--primary-dark);
+        }
+
+        .view-button:hover {
+            background: #E6D0BE;
+            color: var(--primary-dark);
+        }
+
+        .buy-button {
+            background: var(--primary);
+            color: white;
+        }
+
+        .buy-button:hover {
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        .remove-button {
+            background: #FCE8E6;
+            color: var(--danger);
+        }
+
+        .remove-button:hover {
+            background: #F5D0CC;
+        }
+
+        .empty-state {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 65px 20px;
+            text-align: center;
+        }
+
+        .empty-state i {
+            font-size: 60px;
+            color: var(--primary);
+        }
+
+        .empty-state h2 {
+            font-size: 26px;
+            font-weight: 800;
+            margin: 20px 0;
+        }
+
+        .empty-state p {
+            color: var(--muted);
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
+
+        .explore-button {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 9px;
+            font-weight: 700;
+        }
+
+        .explore-button:hover {
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        footer {
+            margin-top: 60px;
+            background: var(--dark);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        @media (max-width: 900px) {
+            .product-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 600px) {
+            .page-title {
+                font-size: 28px;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                gap: 13px;
+            }
+
+            .page-container {
+                margin-top: 30px;
+                padding: 0 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="topbar">
+    <div class="navbar-inner">
+
+        <a href="{% url 'home' %}" class="brand">
+            <i class="bi bi-bag-check-fill"></i>
+            MiniCatalogue
+        </a>
+
+        <nav class="nav-links">
+            <a href="{% url 'home' %}">Home</a>
+
+            <a href="{% url 'products' %}">Products</a>
+
+            {% if user.is_authenticated %}
+                <a href="{% url 'cart' %}">
+                    <i class="bi bi-cart3"></i>
+                    My Cart
+                </a>
+            {% endif %}
+
+            <a href="{% url 'favourite_products' %}">
+                ❤️ Favourites
+                <span id="favouriteCount" class="count-badge">0</span>
+            </a>
+        </nav>
+
+    </div>
+</header>
+
+<main class="page-container">
+
+    <h1 class="page-title">
+        <i class="bi bi-heart-fill" style="color:#C8753E;"></i>
+        My Favourite Products
+    </h1>
+
+    <p class="page-subtitle">
+        Your favourite products, all in one place.
+        Choose a product and purchase it directly.
+    </p>
+
+    <p class="message" id="favouriteMessage" aria-live="polite"></p>
+
+    <!-- Used to obtain a valid Django CSRF token -->
+    <form id="csrfSeed" hidden>
+        {% csrf_token %}
+    </form>
+
+    <!-- Favourite products are displayed here -->
+    <div id="favouriteProducts" class="product-grid"></div>
+
+    <!-- Empty favourites message -->
+    <div id="emptyState" class="empty-state" hidden>
+
+        <i class="bi bi-heart"></i>
+
+        <h2>No Favourite Products Yet</h2>
+
+        <p>
+            Explore our collection and save products you love
+            by clicking the heart button.
+        </p>
+
+        <a href="{% url 'products' %}" class="explore-button">
+            <i class="bi bi-grid"></i>
+            Explore Products
+        </a>
+
+    </div>
+
+</main>
+
+<footer>
+    © {% now "Y" %} MiniCatalogue. All rights reserved.
+</footer>
+
+<script>
+    const FAVORITES_KEY = "miniCatalogueFavorites";
+
+    /*
+     * Django URL generated from urls.py.
+     * This assumes add_to_cart accepts a product ID.
+     */
+    const ADD_TO_CART_URL_TEMPLATE = "{% url 'add_to_cart' 0 %}";
+
+    /*
+     * Obtain the CSRF token generated by Django.
+     */
+    function getCsrfToken() {
+        const tokenInput = document.querySelector(
+            '#csrfSeed input[name="csrfmiddlewaretoken"]'
+        );
+
+        return tokenInput ? tokenInput.value : "";
+    }
+
+    /*
+     * Read saved favourites.
+     */
+    function getFavorites() {
+        try {
+            const saved = JSON.parse(
+                localStorage.getItem(FAVORITES_KEY) || "[]"
+            );
+
+            return Array.isArray(saved) ? saved : [];
+
+        } catch (error) {
+            return [];
+        }
+    }
+
+    /*
+     * Create an image placeholder.
+     */
+    function createPlaceholder() {
+        const icon = document.createElement("i");
+
+        icon.className = "bi bi-box-seam placeholder";
+
+        icon.setAttribute("aria-hidden", "true");
+
+        return icon;
+    }
+
+    /*
+     * Create a Django add-to-cart URL for a product.
+     */
+    function getAddToCartUrl(productId) {
+        /*
+         * Replace the trailing product ID generated by Django.
+         * The URL pattern must accept an integer product ID.
+         */
+        return ADD_TO_CART_URL_TEMPLATE.replace(
+            /0\/?$/,
+            String(encodeURIComponent(productId)) + "/"
+        );
+    }
+
+    /*
+     * Create the Buy Now form.
+     *
+     * The Django view must support next=checkout.
+     */
+    function createBuyNowForm(product) {
+        const form = document.createElement("form");
+
+        form.method = "POST";
+        form.action = getAddToCartUrl(product.id);
+
+        const csrf = document.createElement("input");
+
+        csrf.type = "hidden";
+        csrf.name = "csrfmiddlewaretoken";
+        csrf.value = getCsrfToken();
+
+        const next = document.createElement("input");
+
+        next.type = "hidden";
+        next.name = "next";
+        next.value = "checkout";
+
+        const button = document.createElement("button");
+
+        button.type = "submit";
+        button.className = "button buy-button";
+
+        const icon = document.createElement("i");
+
+        icon.className = "bi bi-bag-check-fill";
+
+        button.append(
+            icon,
+            document.createTextNode(" Buy Now")
+        );
+
+        form.append(csrf, next, button);
+
+        return form;
+    }
+
+    /*
+     * Render the favourite product cards.
+     */
+    function renderFavorites() {
+        const container = document.getElementById(
+            "favouriteProducts"
+        );
+
+        const emptyState = document.getElementById(
+            "emptyState"
+        );
+
+        const count = document.getElementById(
+            "favouriteCount"
+        );
+
+        const message = document.getElementById(
+            "favouriteMessage"
+        );
+
+        const favorites = getFavorites();
+
+        container.replaceChildren();
+
+        count.textContent = favorites.length;
+
+        emptyState.hidden = favorites.length !== 0;
+
+        container.hidden = favorites.length === 0;
+
+        message.textContent = favorites.length
+            ? favorites.length + " favourite product(s) saved."
+            : "";
+
+        favorites.forEach(product => {
+            const card = document.createElement("article");
+
+            card.className = "product-card";
+
+            /*
+             * Product image.
+             */
+            const imageArea = document.createElement("div");
+
+            imageArea.className = "product-image";
+
+            if (product.image) {
+                const image = document.createElement("img");
+
+                image.src = product.image;
+
+                image.alt = product.name || "Product image";
+
+                image.loading = "lazy";
+
+                image.onerror = function () {
+                    image.replaceWith(createPlaceholder());
+                };
+
+                imageArea.appendChild(image);
+
+            } else {
+                imageArea.appendChild(createPlaceholder());
+            }
+
+            /*
+             * Product details.
+             */
+            const details = document.createElement("div");
+
+            details.className = "product-details";
+
+            const name = document.createElement("h2");
+
+            name.className = "product-name";
+
+            name.textContent = product.name || "Unnamed Product";
+
+            const category = document.createElement("div");
+
+            category.className = "category";
+
+            category.textContent =
+                (product.category || "Product") +
+                (product.subcategory
+                    ? " · " + product.subcategory
+                    : "");
+
+            const description = document.createElement("p");
+
+            description.className = "description";
+
+            description.textContent =
+                product.description || "No description available.";
+
+            /*
+             * Product price.
+             */
+            const price = document.createElement("div");
+
+            price.className = "price";
+
+            const numericPrice = Number(product.price);
+
+            price.textContent = Number.isFinite(numericPrice)
+                ? "₹" + numericPrice.toLocaleString("en-IN", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                })
+                : "Price unavailable";
+
+            /*
+             * View Product button.
+             */
+            const view = document.createElement("a");
+
+            view.className = "button view-button";
+
+            view.href = product.detailUrl || "#";
+
+            view.textContent = "View Product";
+
+            if (!product.detailUrl) {
+                view.setAttribute("aria-disabled", "true");
+
+                view.addEventListener("click", function (event) {
+                    event.preventDefault();
+
+                    message.textContent =
+                        "Product details page is not available for this item.";
+                });
+            }
+
+            /*
+             * Buy Now button.
+             */
+            const buyForm = createBuyNowForm(product);
+
+            /*
+             * Remove from Favourites button.
+             */
+            const remove = document.createElement("button");
+
+            remove.type = "button";
+
+            remove.className = "button remove-button";
+
+            remove.innerHTML =
+                '<i class="bi bi-heartbreak-fill"></i> Remove from Favourites';
+
+            remove.addEventListener("click", function () {
+                const remaining = getFavorites().filter(
+                    item => String(item.id) !== String(product.id)
+                );
+
+                localStorage.setItem(
+                    FAVORITES_KEY,
+                    JSON.stringify(remaining)
+                );
+
+                renderFavorites();
+            });
+
+            details.append(
+                name,
+                category,
+                description,
+                price,
+                view,
+                buyForm,
+                remove
+            );
+
+            card.append(imageArea, details);
+
+            container.appendChild(card);
+        });
+    }
+
+    /*
+     * Render when the page loads.
+     */
+    document.addEventListener(
+        "DOMContentLoaded",
+        renderFavorites
+    );
+
+    /*
+     * Update if favourites change in another browser tab.
+     */
+    window.addEventListener("storage", function (event) {
+        if (event.key === FAVORITES_KEY) {
+            renderFavorites();
+        }
+    });
+</script>
+
+</body>
+</html>

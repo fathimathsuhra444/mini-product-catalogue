@@ -1,0 +1,1067 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MiniCatalogue</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+          rel="stylesheet">
+
+    <style>
+        :root {
+            --dark: #21140e;
+            --brown: #493020;
+            --orange: #ef6b0b;
+            --orange-light: #ff963f;
+            --cream: #faf6f0;
+            --text: #17263a;
+            --white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            background: var(--cream);
+            color: var(--text);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        .navbar-custom {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--dark);
+            border-bottom: 1px solid #6a432b;
+            padding: 12px 5%;
+        }
+
+        .brand {
+            font-size: 25px;
+            font-weight: 800;
+            color: white;
+            white-space: nowrap;
+        }
+
+        .brand i {
+            color: var(--orange);
+        }
+
+        .brand span {
+            color: var(--orange);
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            transition: color .3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--orange-light);
+        }
+
+        .login-button {
+            color: var(--orange-light);
+            border: 1px solid var(--orange);
+            border-radius: 10px;
+            padding: 9px 18px;
+            transition: .3s;
+        }
+
+        .login-button:hover {
+            color: white;
+            background: var(--orange);
+        }
+
+        .search-form {
+            display: flex;
+            align-items: center;
+            background: #49372b;
+            border-radius: 25px;
+            padding: 4px 12px;
+        }
+
+        .search-form input {
+            width: 145px;
+            color: white;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 6px;
+        }
+
+        .search-form input::placeholder {
+            color: #e6d9cf;
+        }
+
+        .search-form button {
+            background: transparent;
+            border: none;
+            color: var(--orange-light);
+        }
+
+        /* ================= HERO BANNER ================= */
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            color: white;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(33, 20, 14, .98) 0%,
+                    rgba(67, 35, 18, .94) 48%,
+                    rgba(33, 20, 14, .40) 100%
+                ),
+                url("https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=1800&q=85")
+                center/cover no-repeat;
+        }
+
+        .hero-inner {
+            max-width: 1400px;
+            min-height: 310px;
+            padding: 45px 5%;
+            margin: auto;
+
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .hero-text {
+            animation: slideInLeft 1s ease both;
+        }
+
+        .hero-label {
+            color: var(--orange-light);
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .hero h1 {
+            font-size: clamp(32px, 4vw, 48px);
+            line-height: 1.15;
+            font-weight: 800;
+            margin: 12px 0;
+        }
+
+        .hero h1 span {
+            color: var(--orange);
+        }
+
+        .hero p {
+            color: #eee2d8;
+            max-width: 440px;
+            line-height: 1.7;
+        }
+
+        .shop-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+
+            margin-top: 8px;
+            padding: 12px 25px;
+
+            background: linear-gradient(
+                100deg,
+                var(--orange),
+                #d94c0a
+            );
+
+            color: white;
+            font-weight: 700;
+            border-radius: 13px;
+
+            transition: transform .3s, box-shadow .3s;
+        }
+
+        .shop-button:hover {
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(239, 107, 11, .4);
+        }
+
+        .hero-image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: floatImage 4s ease-in-out infinite;
+        }
+
+        .hero-image img {
+            width: 100%;
+            max-width: 530px;
+            max-height: 260px;
+            object-fit: contain;
+            filter: drop-shadow(0 15px 20px rgba(0,0,0,.3));
+        }
+
+        /* ================= MAIN CONTENT ================= */
+
+        .container-main {
+            max-width: 1400px;
+            padding: 25px 5% 45px;
+            margin: auto;
+        }
+
+        .section {
+            margin-bottom: 25px;
+            animation: fadeUp .8s ease both;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 21px;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        .section-title i {
+            color: var(--orange);
+        }
+
+        .section-subtitle {
+            margin: 5px 0 0 30px;
+            font-size: 13px;
+            color: #777;
+        }
+
+        .view-all {
+            color: var(--orange);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .view-all:hover {
+            color: var(--brown);
+        }
+
+        /* ================= CATEGORY CARDS ================= */
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 13px;
+        }
+
+        .category-card {
+            background: white;
+            color: var(--text);
+            border: 1px solid #eadbcb;
+            border-radius: 13px;
+
+            padding: 15px 8px;
+            text-align: center;
+
+            transition:
+                transform .3s,
+                box-shadow .3s,
+                border-color .3s;
+        }
+
+        .category-card:hover {
+            transform: translateY(-7px);
+            border-color: var(--orange);
+            box-shadow: 0 12px 25px rgba(81, 48, 26, .12);
+            color: var(--brown);
+        }
+
+        .category-image {
+            width: 75px;
+            height: 75px;
+            margin: 0 auto 10px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 50%;
+            background: #fff0e1;
+            overflow: hidden;
+        }
+
+        .category-image img {
+            width: 90%;
+            height: 90%;
+            object-fit: contain;
+            transition: transform .4s;
+        }
+
+        .category-card:hover .category-image img {
+            transform: scale(1.12) rotate(-3deg);
+        }
+
+        .category-card strong {
+            font-size: 13px;
+        }
+
+        .category-card strong i {
+            color: var(--orange);
+        }
+
+        /* ================= SUBCATEGORIES ================= */
+
+        .subcategory-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .subcategory-box {
+            padding: 15px;
+            border: 1px solid #eadbcb;
+            border-radius: 11px;
+            background: rgba(255,255,255,.35);
+        }
+
+        .subcategory-box h3 {
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 13px;
+        }
+
+        .subcategory-box h3 i {
+            color: var(--orange);
+            margin-right: 8px;
+        }
+
+        .subcategory-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .subcategory-links a {
+            background: white;
+            color: var(--text);
+            border: 1px solid #eee0d2;
+            border-radius: 20px;
+            padding: 7px 12px;
+            font-size: 12px;
+
+            transition: .25s;
+        }
+
+        .subcategory-links a:hover {
+            background: var(--orange);
+            color: white;
+            border-color: var(--orange);
+            transform: translateY(-2px);
+        }
+
+        /* ================= PRODUCT CARDS ================= */
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 13px;
+        }
+
+        .product-card {
+            position: relative;
+            background: white;
+            border: 1px solid #eadbcb;
+            border-radius: 12px;
+            overflow: hidden;
+
+            transition: transform .3s, box-shadow .3s;
+            animation: fadeUp .7s ease both;
+        }
+
+        .product-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 14px 28px rgba(64, 38, 20, .14);
+        }
+
+        .product-image {
+            height: 135px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            padding: 12px;
+            background: linear-gradient(#fff, #fcf7f1);
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform .4s;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.08);
+        }
+
+        .product-placeholder {
+            font-size: 50px;
+            color: #b7a28e;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            z-index: 2;
+
+            padding: 4px 9px;
+            border-radius: 20px;
+            background: var(--orange);
+            color: white;
+
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .product-info {
+            padding: 10px 12px 13px;
+        }
+
+        .product-name {
+            font-size: 13px;
+            font-weight: 800;
+            margin: 0 0 5px;
+
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .product-category {
+            color: #777;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .product-price {
+            color: var(--orange);
+            font-size: 14px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .product-button {
+            display: block;
+            text-align: center;
+
+            background: linear-gradient(
+                100deg,
+                var(--orange),
+                #d9570b
+            );
+
+            color: white;
+            border-radius: 20px;
+            padding: 8px 5px;
+            font-size: 11px;
+            font-weight: 700;
+
+            transition: .3s;
+        }
+
+        .product-button:hover {
+            color: white;
+            filter: brightness(.9);
+        }
+
+        .empty-products {
+            grid-column: 1 / -1;
+            text-align: center;
+            background: white;
+            border: 1px dashed #dfc8b3;
+            border-radius: 12px;
+            padding: 35px;
+            color: #777;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            background: var(--dark);
+            color: #eee2d8;
+            text-align: center;
+            padding: 25px 15px;
+        }
+
+        footer a {
+            color: white;
+            margin: 0 10px;
+        }
+
+        footer a:hover {
+            color: var(--orange-light);
+        }
+
+        footer strong {
+            color: var(--orange-light);
+        }
+
+        /* ================= ANIMATIONS ================= */
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes floatImage {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 1100px) {
+            .category-grid,
+            .product-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            .subcategory-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 760px) {
+            .navbar-custom {
+                position: relative;
+            }
+
+            .navbar-custom .nav-inner {
+                flex-direction: column;
+            }
+
+            .nav-links {
+                gap: 15px;
+            }
+
+            .hero-inner {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-image img {
+                max-height: 200px;
+            }
+
+            .category-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .subcategory-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 380px) {
+            .container-main {
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+
+            .product-grid {
+                gap: 8px;
+            }
+
+            .product-info {
+                padding: 8px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: .01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= NAVIGATION ================= -->
+
+<header class="navbar-custom">
+    <div class="nav-inner d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+        <a href="{% url 'home' %}" class="brand">
+            <i class="bi bi-bag-fill"></i>
+            Mini<span>Catalogue</span>
+        </a>
+
+        <nav class="nav-links">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'about' %}">About</a>
+            <a href="{% url 'products' %}">Products</a>
+            <a href="#categories">Categories</a>
+            <a href="#featured">Best Sellers</a>
+            <a href="{% url 'customer_profile' %}">My Profile</a>
+            <a href="{% url 'orders' %}">My Orders</a>
+        </nav>
+
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+
+            <form class="search-form" action="{% url 'products' %}" method="get">
+                <input type="search" name="q" placeholder="Search products...">
+                <button type="submit" aria-label="Search">
+                    <i class="bi bi-search"></i>
+                </button>
+            </form>
+
+           {% if user.is_authenticated %}
+    <form method="post" action="{% url 'logout' %}" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="login-button">Logout</button>
+    </form>
+{% else %}
+    <a href="{% url 'login' %}" class="login-button">Login</a>
+{% endif %}
+
+
+        </div>
+    </div>
+</header>
+
+<!-- ================= HERO SECTION ================= -->
+
+<section class="hero">
+    <div class="hero-inner">
+
+        <div class="hero-text">
+
+            <div class="hero-label">
+                WELCOME TO MINICATALOGUE
+            </div>
+
+            <h1>
+                Latest Electronics<br>
+                <span>Best Prices</span>
+            </h1>
+
+            <p>
+                Explore a wide range of products from top brands.
+                Find your perfect gadget, laptop, or accessory today.
+            </p>
+
+            <a href="{% url 'products' %}" class="shop-button">
+                Shop Now
+                <i class="bi bi-chevron-right"></i>
+            </a>
+
+        </div>
+
+        <div class="hero-image">
+            <img
+                src="https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=1000&q=85"
+                alt="Electronic gadgets including laptop and accessories"
+            >
+        </div>
+
+    </div>
+</section>
+
+<main class="container-main">
+
+    <!-- ================= CATEGORIES ================= -->
+    <section class="section" id="categories">
+
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">
+                    <i class="bi bi-grid-fill"></i>
+                    Product Categories
+                </h2>
+
+                <p class="section-subtitle">
+                    Find products by category
+                </p>
+            </div>
+
+            <a href="{% url 'products' %}" class="view-all">
+                View All <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="category-grid">
+
+            <!-- SMARTPHONES -->
+            <a href="{% url 'products' %}?category=Smartphone"
+               class="category-card">
+
+                <div class="category-image">
+                    <img
+                        src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=300&q=80"
+                        alt="Smartphone">
+                </div>
+
+                <strong>
+                    Smartphones <i class="bi bi-arrow-right"></i>
+                </strong>
+            </a>
+
+
+            <!-- LAPTOPS -->
+            <a href="{% url 'products' %}?category=Laptop"
+               class="category-card">
+
+                <div class="category-image">
+                    <img
+                        src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=300&q=80"
+                        alt="Laptop">
+                </div>
+
+                <strong>
+                    Laptops <i class="bi bi-arrow-right"></i>
+                </strong>
+            </a>
+
+
+            <!-- HEADPHONES -->
+            <a href="{% url 'products' %}?category=Headphones"
+               class="category-card">
+
+                <div class="category-image">
+                    <img
+                        src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=300&q=80"
+                        alt="Headphones">
+                </div>
+
+                <strong>
+                    Headphones <i class="bi bi-arrow-right"></i>
+                </strong>
+            </a>
+
+
+            <!-- TABLETS -->
+            <a href="{% url 'products' %}?category=Tablets"
+               class="category-card">
+
+                <div class="category-image">
+                    <img
+                        src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=300&q=80"
+                        alt="Tablet">
+                </div>
+
+                <strong>
+                    Tablets <i class="bi bi-arrow-right"></i>
+                </strong>
+            </a>
+
+
+            <!-- GAMING -->
+            <a href="{% url 'products' %}?category=Gaming"
+               class="category-card">
+
+                <div class="category-image">
+                    <img
+                        src="https://images.unsplash.com/photo-1592840496694-26d035b52b48?auto=format&fit=crop&w=300&q=80"
+                        alt="Gaming">
+                </div>
+
+                <strong>
+                    Gaming <i class="bi bi-arrow-right"></i>
+                </strong>
+            </a>
+
+
+            <!-- WEARABLES -->
+            <a href="{% url 'products' %}?category=Wearables"
+               class="category-card">
+
+                <div class="category-image">
+                    <img
+                        src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=300&q=80"
+                        alt="Wearables">
+                </div>
+
+                <strong>
+                    Wearables <i class="bi bi-arrow-right"></i>
+                </strong>
+            </a>
+
+        </div>
+    </section>
+
+</main>
+
+        </div>
+    </section>
+
+    <!-- ================= SUBCATEGORIES ================= -->
+
+    <section class="section">
+
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="bi bi-bag-check-fill"></i>
+                Browse Subcategories
+            </h2>
+        </div>
+
+        <div class="subcategory-grid">
+
+            <!-- Smartphone subcategories -->
+
+            <div class="subcategory-box">
+
+                <h3>
+                    <i class="bi bi-phone"></i>
+                    Smartphones
+                </h3>
+
+                <div class="subcategory-links">
+                    <a href="{% url 'products' %}?category=Smartphone&subcategory=iPhone">iPhone</a>
+
+                    <a href="{% url 'products' %}?category=Smartphone&subcategory=Android%20Smartphone">Android Smartphone</a>
+
+                    <a href="{% url 'products' %}?category=Smartphone&subcategory=Camera%20Smartphone">Camera Smartphone</a>
+
+                    <a href="{% url 'products' %}?category=Smartphone&subcategory=Gaming%20Smartphone">Gaming Smartphone</a>
+
+                    <a href="{% url 'products' %}?category=Smartphone&subcategory=Budget%20Smartphone">Budget Smartphone</a>
+
+                    <a href="{% url 'products' %}?category=Smartphone&subcategory=Premium%20Smartphone">Premium Smartphone</a>
+                </div>
+
+            </div>
+
+            <!-- Laptop subcategories -->
+
+            <div class="subcategory-box">
+
+                <h3>
+                    <i class="bi bi-laptop"></i>
+                    Laptops
+                </h3>
+
+                <div class="subcategory-links">
+                    <a href="{% url 'products' %}?category=Laptop&subcategory=Gaming%20Laptop">Gaming Laptop</a>
+
+                    <a href="{% url 'products' %}?category=Laptop&subcategory=Business%20Laptop">Business Laptop</a>
+
+                    <a href="{% url 'products' %}?category=Laptop&subcategory=Student%20Laptop">Student Laptop</a>
+
+                    <a href="{% url 'products' %}?category=Laptop&subcategory=Personal%20Laptop">Personal Laptop</a>
+
+                    <a href="{% url 'products' %}?category=Laptop&subcategory=Creator%20Laptop">Creator Laptop</a>
+
+                    <a href="{% url 'products' %}?category=Laptop&subcategory=Ultrabook">Ultrabook</a>
+                </div>
+
+            </div>
+
+            <!-- Headphone subcategories -->
+
+            <div class="subcategory-box">
+
+                <h3>
+                    <i class="bi bi-headphones"></i>
+                    Headphones
+                </h3>
+
+                <div class="subcategory-links">
+                    <a href="{% url 'products' %}?category=Headphones&subcategory=Wireless%20Headphones">Wireless Headphones</a>
+
+                    <a href="{% url 'products' %}?category=Headphones&subcategory=Wired%20Headphones">Wired Headphones</a>
+
+                    <a href="{% url 'products' %}?category=Headphones&subcategory=Noise-Cancelling%20Headphones">Noise-Cancelling Headphones</a>
+
+                    <a href="{% url 'products' %}?category=Headphones&subcategory=Gaming%20Headphones">Gaming Headphones</a>
+
+                    <a href="{% url 'products' %}?category=Headphones&subcategory=Earbuds">Earbuds</a>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ================= AVAILABLE PRODUCTS ================= -->
+
+    <section class="section" id="featured">
+
+        <div class="section-header">
+
+            <h2 class="section-title">
+                <i class="bi bi-star-fill"></i>
+                Available Products
+            </h2>
+
+            <a href="{% url 'products' %}" class="view-all">
+                View All <i class="bi bi-arrow-right"></i>
+            </a>
+
+        </div>
+
+        <div class="product-grid">
+
+            {% for product in products %}
+
+                <article class="product-card">
+
+                    {% if forloop.counter|divisibleby:2 %}
+                        <span class="product-badge">Best Seller</span>
+                    {% else %}
+                        <span class="product-badge">New</span>
+                    {% endif %}
+
+                    <a href="{% url 'products' %}" class="product-image">
+
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}"
+                                 alt="{{ product.name }}">
+                        {% else %}
+                            <i class="bi bi-box-seam product-placeholder"></i>
+                        {% endif %}
+
+                    </a>
+
+                    <div class="product-info">
+
+                        <h3 class="product-name"
+                            title="{{ product.name }}">
+                            {{ product.name }}
+                        </h3>
+
+                        <div class="product-category">
+                            {{ product.get_category_display|default:product.category }}
+                        </div>
+
+                        <div class="product-price">
+                            ₹{{ product.price|floatformat:2 }}
+                        </div>
+
+                        <a href="{% url 'product_detail' product.id %}" class="product-button">
+    <i class="bi bi-eye"></i>
+                            View Product
+                        </a>
+
+                    </div>
+
+                </article>
+
+            {% empty %}
+
+                <div class="empty-products">
+                    <i class="bi bi-box-seam fs-1"></i>
+                    <h3>No products available yet</h3>
+                    <p>
+                        Add products through your admin account
+                        to display them here.
+                    </p>
+                </div>
+
+            {% endfor %}
+
+        </div>
+    </section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <div class="mb-3">
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'about' %}">About</a>
+        <a href="{% url 'products' %}">Products</a>
+        <a href="/admin/">Admin</a>
+    </div>
+
+    <p class="mb-0">
+        © 2026 <strong>MiniCatalogue</strong>. All rights reserved.
+    </p>
+
+</footer>
+
+<script>
+    // Animate product cards one after another.
+    document.querySelectorAll(".product-card").forEach((card, index) => {
+        card.style.animationDelay = `${Math.min(index * 100, 500)}ms`;
+    });
+</script>
+
+</body>
+</html>
+

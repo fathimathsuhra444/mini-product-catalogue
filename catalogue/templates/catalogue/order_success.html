@@ -1,0 +1,653 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Order Successful | MiniCatalogue</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f7f2ed;
+            color: #29231f;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* NAVIGATION */
+        .navbar {
+            background: #ffffff;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .brand {
+            font-size: 25px;
+            font-weight: 800;
+            color: #b65f30;
+            text-decoration: none;
+            letter-spacing: -1px;
+        }
+
+        .brand span {
+            color: #332820;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #5e5148;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* MAIN CONTAINER */
+        .main-container {
+            max-width: 900px;
+            margin: 55px auto;
+            padding: 20px;
+        }
+
+        .success-card {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(75, 48, 30, 0.09);
+            animation: appear 0.65s ease-out;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* SUCCESS BANNER */
+        .success-banner {
+            text-align: center;
+            padding: 42px 25px 35px;
+            background: linear-gradient(135deg, #fff4e9, #fffaf5);
+            border-bottom: 1px solid #f0e5dc;
+        }
+
+        .success-icon {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 22px;
+            background: #e3f7e9;
+            color: #21864b;
+            border: 5px solid #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 5px 20px rgba(33, 134, 75, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 46px;
+            font-weight: bold;
+            animation: pop 0.7s ease-out;
+        }
+
+        .success-banner h1 {
+            font-size: clamp(27px, 5vw, 38px);
+            color: #267a48;
+            margin-bottom: 12px;
+        }
+
+        .success-banner p {
+            font-size: 16px;
+            color: #78685d;
+            line-height: 1.7;
+        }
+
+        .customer-name {
+            color: #a8562c;
+            font-weight: 700;
+        }
+
+        .order-number {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 9px 18px;
+            border-radius: 30px;
+            background: #ffffff;
+            border: 1px solid #efdfd2;
+            font-size: 14px;
+            color: #73523e;
+        }
+
+        /* ORDER DETAILS */
+        .order-content {
+            padding: 35px;
+        }
+
+        .section-heading {
+            font-size: 21px;
+            margin-bottom: 22px;
+            color: #332820;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .detail-box {
+            padding: 19px;
+            background: #fcf9f6;
+            border: 1px solid #f0e7df;
+            border-radius: 14px;
+            min-width: 0;
+        }
+
+        .detail-label {
+            display: block;
+            color: #8c7a6e;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 9px;
+        }
+
+        .detail-value {
+            display: block;
+            color: #332820;
+            font-size: 17px;
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+        .amount-box {
+            background: #fff2e7;
+            border-color: #f3d4bc;
+        }
+
+        .amount-box .detail-value {
+            font-size: 25px;
+            color: #b65f30;
+        }
+
+        /* STATUS BADGES */
+        .badge {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .pending {
+            color: #996515;
+            background: #fff0c7;
+        }
+
+        .confirmed {
+            color: #247443;
+            background: #dff5e5;
+        }
+
+        .cancelled {
+            color: #a62c2c;
+            background: #ffe3e3;
+        }
+
+        /* DELIVERY MESSAGE */
+        .delivery-note {
+            margin-top: 26px;
+            padding: 19px;
+            border-left: 4px solid #c8753e;
+            background: #fff8f2;
+            border-radius: 8px;
+            line-height: 1.7;
+            color: #6c594b;
+            font-size: 14px;
+        }
+
+        .delivery-note strong {
+            color: #9b512b;
+        }
+
+        /* BUTTONS */
+        .button-group {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 13px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 25px;
+            border-radius: 10px;
+            text-decoration: none;
+            text-align: center;
+            font-weight: 700;
+            font-size: 14px;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .btn-primary {
+            background: #c8753e;
+            color: white;
+            border: 1px solid #c8753e;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #a45b33;
+            border: 1px solid #e5c6b0;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:hover {
+            background: #a85d2d;
+        }
+
+        .btn-secondary:hover {
+            background: #fff3e9;
+        }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #96877c;
+            font-size: 13px;
+        }
+
+        /* CONFETTI CELEBRATION */
+        .confetti {
+            position: fixed;
+            top: -20px;
+            z-index: 9999;
+            pointer-events: none;
+            border-radius: 2px;
+            animation: confetti-fall linear forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translate3d(0, -10px, 0) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate3d(var(--drift), 110vh, 0)
+                           rotate(var(--rotation));
+                opacity: 0;
+            }
+        }
+
+        /* ANIMATIONS */
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+
+            70% {
+                transform: scale(1.12);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 16px 5%;
+            }
+
+            .brand {
+                font-size: 21px;
+            }
+
+            .main-container {
+                margin: 25px auto;
+                padding: 12px;
+            }
+
+            .success-banner {
+                padding: 32px 18px;
+            }
+
+            .order-content {
+                padding: 23px 18px;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .detail-box {
+                padding: 16px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+    <nav class="navbar">
+        <a href="{% url 'home' %}" class="brand">
+            Mini<span>Catalogue</span>
+        </a>
+
+        <a href="{% url 'orders' %}" class="nav-link">
+            My Orders →
+        </a>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-container">
+
+        <section class="success-card">
+
+            <!-- SUCCESS BANNER -->
+            <div class="success-banner">
+
+                <div class="success-icon" aria-hidden="true">
+                    ✓
+                </div>
+
+                <h1>Order Placed Successfully!</h1>
+
+                <p>
+                    Thank you,
+                    <span class="customer-name">
+                        {{ order.full_name }}
+                    </span>!
+                </p>
+
+                <p>
+                    Thank you for shopping with MiniCatalogue.
+                    Your order details are ready.
+                </p>
+
+                <div class="order-number">
+                    Order ID: #{{ order.id }}
+                </div>
+
+            </div>
+
+            <!-- ORDER SUMMARY -->
+            <div class="order-content">
+
+                <h2 class="section-heading">
+                    Your Order Summary
+                </h2>
+
+                <div class="details-grid">
+
+                    <div class="detail-box">
+                        <span class="detail-label">
+                            Order Number
+                        </span>
+
+                        <span class="detail-value">
+                            #{{ order.id }}
+                        </span>
+                    </div>
+
+                    <div class="detail-box amount-box">
+                        <span class="detail-label">
+                            Total Amount
+                        </span>
+
+                        <span class="detail-value">
+                            ₹{{ order.total_amount|floatformat:2 }}
+                        </span>
+                    </div>
+
+                    <div class="detail-box">
+                        <span class="detail-label">
+                            Payment Method
+                        </span>
+
+                        <span class="detail-value">
+                            {% if order.payment_method == 'COD' %}
+                                Cash on Delivery
+                            {% elif order.payment_method == 'UPI' %}
+                                UPI QR Payment
+                            {% else %}
+                                {{ order.payment_method }}
+                            {% endif %}
+                        </span>
+                    </div>
+
+                    <div class="detail-box">
+                        <span class="detail-label">
+                            Payment Status
+                        </span>
+
+                        <span class="detail-value">
+
+                            {% if order.payment_status == 'Paid' %}
+
+                                <span class="badge confirmed">
+                                    Paid
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge pending">
+                                    {{ order.payment_status }}
+                                </span>
+
+                            {% endif %}
+
+                        </span>
+                    </div>
+
+                    <div class="detail-box">
+                        <span class="detail-label">
+                            Order Status
+                        </span>
+
+                        <span class="detail-value">
+
+                            {% if order.status == 'Confirmed' or order.status == 'Delivered' or order.status == 'Completed' %}
+
+                                <span class="badge confirmed">
+                                    {{ order.status }}
+                                </span>
+
+                            {% elif order.status == 'Cancelled' %}
+
+                                <span class="badge cancelled">
+                                    {{ order.status }}
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge pending">
+                                    {{ order.status }}
+                                </span>
+
+                            {% endif %}
+
+                        </span>
+                    </div>
+
+                    <div class="detail-box">
+                        <span class="detail-label">
+                            Customer Name
+                        </span>
+
+                        <span class="detail-value">
+                            {{ order.full_name }}
+                        </span>
+                    </div>
+
+                </div>
+
+                <!-- DELIVERY INFORMATION -->
+                <div class="delivery-note">
+
+                    <strong>What's next?</strong>
+
+                    <br>
+
+                    {% if order.payment_method == 'COD' %}
+
+                        Your order has been recorded.
+                        Please keep the payment ready for delivery.
+
+                    {% elif order.payment_method == 'UPI' and order.payment_status != 'Paid' %}
+
+                        Your order is awaiting payment verification.
+                        Please complete payment using the supported payment
+                        process. Your order will remain pending until
+                        payment is confirmed.
+
+                    {% else %}
+
+                        Thank you for your purchase!
+                        You can check your order status on the My Orders page.
+
+                    {% endif %}
+
+                </div>
+
+                <!-- NAVIGATION BUTTONS -->
+                <div class="button-group">
+
+                    <a href="{% url 'products' %}"
+                       class="btn btn-primary">
+                        Continue Shopping →
+                    </a>
+
+                    <a href="{% url 'orders' %}"
+                       class="btn btn-secondary">
+                        View My Orders
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        © {% now "Y" %} MiniCatalogue · Thank you for shopping with us.
+    </footer>
+
+    <!-- CELEBRATION ANIMATION -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            // Respect the user's reduced-motion preference.
+            if (
+                window.matchMedia &&
+                window.matchMedia("(prefers-reduced-motion: reduce)").matches
+            ) {
+                return;
+            }
+
+            const colors = [
+                "#C8753E",
+                "#28A745",
+                "#FFC107",
+                "#E83E8C",
+                "#4D96FF",
+                "#9B59B6",
+                "#FF7043"
+            ];
+
+            const totalConfetti = 100;
+
+            for (let i = 0; i < totalConfetti; i++) {
+
+                const confetti = document.createElement("div");
+
+                confetti.className = "confetti";
+
+                confetti.style.left =
+                    (Math.random() * 100) + "vw";
+
+                confetti.style.backgroundColor =
+                    colors[Math.floor(Math.random() * colors.length)];
+
+                confetti.style.width =
+                    (6 + Math.random() * 7) + "px";
+
+                confetti.style.height =
+                    (8 + Math.random() * 10) + "px";
+
+                confetti.style.setProperty(
+                    "--drift",
+                    ((Math.random() - 0.5) * 180) + "px"
+                );
+
+                confetti.style.setProperty(
+                    "--rotation",
+                    (360 + Math.random() * 1080) + "deg"
+                );
+
+                confetti.style.animationDuration =
+                    (3 + Math.random() * 2) + "s";
+
+                confetti.style.animationDelay =
+                    (Math.random() * 0.8) + "s";
+
+                document.body.appendChild(confetti);
+
+                confetti.addEventListener("animationend", function () {
+                    confetti.remove();
+                });
+            }
+
+        });
+    </script>
+
+</body>
+</html>

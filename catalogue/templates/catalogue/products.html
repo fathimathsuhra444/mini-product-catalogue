@@ -1,0 +1,1444 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Products | MiniCatalogue</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+          rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #C8753E;
+            --primary-dark: #91451F;
+            --primary-light: #F7E8DD;
+            --page: #F5F1ED;
+            --white: #FFFFFF;
+            --dark: #292725;
+            --text: #302B28;
+            --muted: #81766E;
+            --border: #E5D9D0;
+            --orange: #E18A4F;
+            --danger: #C0392B;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--page);
+            color: var(--text);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        button, input, select {
+            font: inherit;
+        }
+
+        /* NAVIGATION */
+
+        .topbar {
+            background: var(--dark);
+            border-bottom: 3px solid var(--primary);
+            padding: 14px 4%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .topbar-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            color: var(--orange);
+            font-size: 23px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .brand:hover {
+            color: #F5B17F;
+        }
+
+        .brand i {
+            margin-right: 9px;
+            font-size: 25px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 1px solid #6D5B4F;
+            border-radius: 30px;
+            padding: 5px 12px;
+            max-width: 420px;
+            flex: 1;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            background: transparent;
+            padding: 8px;
+            width: 100%;
+            min-width: 0;
+        }
+
+        .search-box button {
+            border: none;
+            background: transparent;
+            color: var(--primary-dark);
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .top-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .top-links > a {
+            color: #F4ECE6;
+            font-weight: 700;
+        }
+
+        .top-links > a:hover {
+            color: var(--orange);
+        }
+
+        .top-links .login-link,
+        .logout-button {
+            background: var(--primary);
+            color: white;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .logout-form {
+            display: inline;
+            margin: 0;
+        }
+
+        .cart-link,
+        .favorites-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .favorite-count {
+            background: var(--danger);
+            color: white;
+            min-width: 20px;
+            height: 20px;
+            padding: 2px 5px;
+            border-radius: 20px;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        /* BREADCRUMB */
+
+        .breadcrumb-area {
+            padding: 20px 4% 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .breadcrumb-area a {
+            color: var(--primary-dark);
+        }
+
+        /* PAGE LAYOUT */
+
+        .page-container {
+            display: grid;
+            grid-template-columns: 255px minmax(0, 1fr);
+            gap: 24px;
+            padding: 20px 4% 50px;
+            align-items: start;
+        }
+
+        /* FILTERS */
+
+        .filter-panel {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 21px;
+            position: sticky;
+            top: 100px;
+        }
+
+        .filter-panel.collapsed {
+            display: none;
+        }
+
+        .filter-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 17px;
+        }
+
+        .filter-heading h2 {
+            font-size: 18px;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        .filter-group {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+
+        .filter-group h3 {
+            font-size: 14px;
+            font-weight: 800;
+            margin: 0 0 13px;
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin: 12px 0;
+            color: #554A43;
+            cursor: pointer;
+        }
+
+        .filter-option input {
+            accent-color: var(--primary);
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: white;
+        }
+
+        .clear-link {
+            border: none;
+            background: transparent;
+            color: var(--primary-dark);
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .apply-button {
+            display: inline-block;
+            width: 100%;
+            margin-top: 17px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 9px;
+            padding: 12px;
+            font-weight: 700;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .apply-button:hover {
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        /* PAGE HEADING */
+
+        .products-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .products-heading h1 {
+            font-size: 29px;
+            font-weight: 800;
+            margin: 12px 0;
+        }
+
+        .products-heading h1 i {
+            color: var(--primary);
+        }
+
+        .products-heading p {
+            color: var(--muted);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .heading-label {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            padding: 6px 11px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .add-product-btn,
+        .mobile-filter-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 18px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 9px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .mobile-filter-button {
+            display: none;
+        }
+
+        /* PRODUCT GRID */
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .product-card {
+            min-width: 0;
+            overflow: hidden;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            position: relative;
+            transition: transform .3s, box-shadow .3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(65, 39, 24, .12);
+        }
+
+        .product-image {
+            height: 190px;
+            background: linear-gradient(145deg, #FAF7F4, #EFE5DC);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 17px;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .image-placeholder {
+            color: #B8A69A;
+            font-size: 58px;
+        }
+
+        /* FAVOURITE HEART */
+
+        .favorite-button {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 3;
+            background: white;
+            color: #78665B;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            width: 39px;
+            height: 39px;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .favorite-button.active {
+            color: white;
+            background: var(--danger);
+            border-color: var(--danger);
+        }
+
+        /* PRODUCT DETAILS */
+
+        .product-details {
+            padding: 15px;
+        }
+
+        .product-name {
+            color: var(--dark);
+            font-size: 15px;
+            font-weight: 800;
+            line-height: 1.5;
+            margin: 0 0 9px;
+            min-height: 42px;
+            overflow-wrap: anywhere;
+        }
+
+        .rating {
+            color: var(--orange);
+            font-size: 13px;
+            margin-bottom: 9px;
+        }
+
+        .rating span {
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .product-category {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.6;
+            margin-bottom: 9px;
+        }
+
+        .product-description {
+            color: #6D625B;
+            font-size: 12px;
+            line-height: 1.6;
+            min-height: 38px;
+            margin-bottom: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .product-price {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 14px;
+            color: var(--primary-dark);
+        }
+
+        .view-button,
+        .add-to-cart-button {
+            display: block;
+            width: 100%;
+            text-align: center;
+            border-radius: 8px;
+            padding: 11px 6px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .view-button {
+            background: var(--primary);
+            color: white;
+        }
+
+        .view-button:hover {
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        .add-to-cart-form {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .add-to-cart-button {
+            background: var(--dark);
+            color: white;
+            border: 1px solid var(--dark);
+        }
+
+        .add-to-cart-button:hover {
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .admin-actions a {
+            flex: 1;
+            text-align: center;
+            padding: 8px 5px;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 7px;
+        }
+
+        .edit-button {
+            color: #754017;
+            background: #F8E7D8;
+        }
+
+        .delete-button {
+            color: #A12626;
+            background: #FCE8E6;
+        }
+
+        /* EMPTY STATE */
+
+        .empty-state {
+            grid-column: 1 / -1;
+            background: white;
+            text-align: center;
+            padding: 55px 20px;
+            border: 1px dashed #D8C5B7;
+            border-radius: 15px;
+        }
+
+        .empty-state > i {
+            color: var(--primary);
+            font-size: 55px;
+        }
+
+        .empty-state h2 {
+            font-size: 22px;
+            margin-top: 17px;
+            font-weight: 800;
+        }
+
+        .empty-state p {
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        /* FOOTER */
+
+        footer {
+            text-align: center;
+            background: var(--dark);
+            color: #D9CEC6;
+            padding: 27px 15px;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        footer strong {
+            color: var(--orange);
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 1100px) {
+            .product-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 950px) {
+            .page-container {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-panel {
+                position: static;
+            }
+
+            .mobile-filter-button {
+                display: inline-flex;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .search-box {
+                order: 3;
+                flex-basis: 100%;
+                max-width: none;
+            }
+
+            .top-links {
+                width: 100%;
+                justify-content: center;
+                gap: 12px;
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+            }
+
+            .product-image {
+                height: 155px;
+            }
+
+            .products-heading h1 {
+                font-size: 25px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .brand {
+                font-size: 20px;
+            }
+
+            .product-grid {
+                gap: 9px;
+            }
+
+            .product-image {
+                height: 125px;
+                padding: 9px;
+            }
+
+            .product-details {
+                padding: 10px;
+            }
+
+            .product-name {
+                font-size: 12px;
+            }
+
+            .product-price {
+                font-size: 17px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="topbar">
+    <div class="topbar-inner">
+
+        <a href="{% url 'home' %}" class="brand">
+            <i class="bi bi-bag-check-fill"></i>
+            MiniCatalogue
+        </a>
+
+        <!-- SEARCH -->
+        <form method="get"
+              action="{% url 'products' %}"
+              class="search-box">
+
+            <input type="search"
+                   name="q"
+                   placeholder="Search products..."
+                   value="{{ request.GET.q|default:'' }}"
+                   aria-label="Search products">
+
+            <button type="submit" aria-label="Search">
+                <i class="bi bi-search"></i>
+            </button>
+        </form>
+
+        <nav class="top-links">
+
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'about' %}">About</a>
+            <a href="{% url 'products' %}">Products</a>
+
+            <!-- CORRECTED FAVOURITES URL -->
+            <a href="{% url 'favourite_products' %}"
+               class="favorites-link">
+
+                <i class="bi bi-heart-fill"></i>
+                Favourites
+
+                <span class="favorite-count" id="favoriteCount">0</span>
+            </a>
+
+            {% if user.is_authenticated %}
+
+                <a href="{% url 'cart' %}" class="cart-link">
+                    <i class="bi bi-cart3"></i>
+                    Cart
+                </a>
+
+                <form method="post"
+                      action="{% url 'logout' %}"
+                      class="logout-form">
+
+                    {% csrf_token %}
+
+                    <button type="submit" class="logout-button">
+                        <i class="bi bi-box-arrow-right"></i>
+                        Logout
+                    </button>
+                </form>
+
+            {% else %}
+
+                <a href="{% url 'login' %}" class="login-link">
+                    <i class="bi bi-person"></i>
+                    Login
+                </a>
+
+                <a href="{% url 'register' %}" class="login-link">
+                    <i class="bi bi-person-plus"></i>
+                    Register
+                </a>
+
+            {% endif %}
+
+        </nav>
+    </div>
+</header>
+
+<div class="breadcrumb-area">
+    <a href="{% url 'home' %}">
+        <i class="bi bi-house"></i> Home
+    </a>
+
+    <i class="bi bi-chevron-right"></i>
+    <span>Products</span>
+</div>
+
+<main class="page-container">
+
+    <!-- FILTER SIDEBAR -->
+
+    <aside class="filter-panel" id="filterPanel">
+
+        <div class="filter-heading">
+            <h2><i class="bi bi-sliders"></i> Filters</h2>
+
+            <button type="button"
+                    class="clear-link"
+                    onclick="window.location.href='{% url 'products' %}'">
+                Clear All
+            </button>
+        </div>
+
+        <form method="get" action="{% url 'products' %}">
+
+            <!-- Preserve search while applying filters -->
+            <input type="hidden"
+                   name="q"
+                   value="{{ request.GET.q|default:'' }}">
+
+            <!-- CATEGORY -->
+            <div class="filter-group">
+                <h3><i class="bi bi-grid"></i> Category</h3>
+
+                <label class="filter-option">
+                    <input type="radio" name="category" value=""
+                           {% if not selected_category %}checked{% endif %}>
+                    All Products
+                </label>
+
+                <label class="filter-option">
+                    <input type="radio" name="category" value="Smartphone"
+                           {% if selected_category == 'Smartphone' %}checked{% endif %}>
+                    Smartphones
+                </label>
+
+                <label class="filter-option">
+                    <input type="radio" name="category" value="Laptop"
+                           {% if selected_category == 'Laptop' %}checked{% endif %}>
+                    Laptops
+                </label>
+
+                <label class="filter-option">
+                    <input type="radio" name="category" value="Headphones"
+                           {% if selected_category == 'Headphones' %}checked{% endif %}>
+                    Headphones
+                </label>
+
+                <label class="filter-option">
+                    <input type="radio" name="category" value="Tablets"
+                           {% if selected_category == 'Tablets' %}checked{% endif %}>
+                    Tablets
+                </label>
+
+                <label class="filter-option">
+                    <input type="radio" name="category" value="Gaming"
+                           {% if selected_category == 'Gaming' %}checked{% endif %}>
+                    Gaming
+                </label>
+
+                <label class="filter-option">
+                    <input type="radio" name="category" value="Wearables"
+                           {% if selected_category == 'Wearables' %}checked{% endif %}>
+                    Wearables
+                </label>
+            </div>
+
+            <!-- SUBCATEGORY -->
+
+            <div class="filter-group">
+                <h3><i class="bi bi-diagram-3"></i> Subcategory</h3>
+
+                <select name="subcategory" class="filter-select">
+
+                    <option value=""
+                        {% if not selected_subcategory %}selected{% endif %}>
+                        All Subcategories
+                    </option>
+
+                    <option value="iPhone"
+                        {% if selected_subcategory == 'iPhone' %}selected{% endif %}>
+                        iPhone
+                    </option>
+
+                    <option value="Android Smartphone"
+                        {% if selected_subcategory == 'Android Smartphone' %}selected{% endif %}>
+                        Android Smartphone
+                    </option>
+
+                    <option value="Camera Smartphone"
+                        {% if selected_subcategory == 'Camera Smartphone' %}selected{% endif %}>
+                        Camera Smartphone
+                    </option>
+
+                    <option value="Gaming Smartphone"
+                        {% if selected_subcategory == 'Gaming Smartphone' %}selected{% endif %}>
+                        Gaming Smartphone
+                    </option>
+
+                    <option value="Budget Smartphone"
+                        {% if selected_subcategory == 'Budget Smartphone' %}selected{% endif %}>
+                        Budget Smartphone
+                    </option>
+
+                    <option value="Premium Smartphone"
+                        {% if selected_subcategory == 'Premium Smartphone' %}selected{% endif %}>
+                        Premium Smartphone
+                    </option>
+
+                    <option value="Gaming Laptop"
+                        {% if selected_subcategory == 'Gaming Laptop' %}selected{% endif %}>
+                        Gaming Laptop
+                    </option>
+
+                    <option value="Business Laptop"
+                        {% if selected_subcategory == 'Business Laptop' %}selected{% endif %}>
+                        Business Laptop
+                    </option>
+
+                    <option value="Student Laptop"
+                        {% if selected_subcategory == 'Student Laptop' %}selected{% endif %}>
+                        Student Laptop
+                    </option>
+
+                    <option value="Personal Laptop"
+                        {% if selected_subcategory == 'Personal Laptop' %}selected{% endif %}>
+                        Personal Laptop
+                    </option>
+
+                    <option value="Creator Laptop"
+                        {% if selected_subcategory == 'Creator Laptop' %}selected{% endif %}>
+                        Creator Laptop
+                    </option>
+
+                    <option value="Ultrabook"
+                        {% if selected_subcategory == 'Ultrabook' %}selected{% endif %}>
+                        Ultrabook
+                    </option>
+
+                    <option value="Wireless Headphones"
+                        {% if selected_subcategory == 'Wireless Headphones' %}selected{% endif %}>
+                        Wireless Headphones
+                    </option>
+
+                    <option value="Wired Headphones"
+                        {% if selected_subcategory == 'Wired Headphones' %}selected{% endif %}>
+                        Wired Headphones
+                    </option>
+
+                    <option value="Noise-Cancelling Headphones"
+                        {% if selected_subcategory == 'Noise-Cancelling Headphones' %}selected{% endif %}>
+                        Noise-Cancelling Headphones
+                    </option>
+
+                    <option value="Gaming Headphones"
+                        {% if selected_subcategory == 'Gaming Headphones' %}selected{% endif %}>
+                        Gaming Headphones
+                    </option>
+
+                    <option value="Earbuds"
+                        {% if selected_subcategory == 'Earbuds' %}selected{% endif %}>
+                        Earbuds
+                    </option>
+                    <option value="Android Tablets"
+                       {% if selected_subcategory == 'Android Tablets' %}selected{% endif %}>
+                       Android Tablets
+                    </option>
+
+                    <option value="iPads"
+                       {% if selected_subcategory == 'iPads' %}selected{% endif %}>
+                        iPads
+                    </option>
+
+                    <option value="Gaming Tablets"
+                      {% if selected_subcategory == 'Gaming Tablets' %}selected{% endif %}>
+                       Gaming Tablets
+                    </option>
+
+                    <option value="Student Tablets"
+                      {% if selected_subcategory == 'Student Tablets' %}selected{% endif %}>
+                       Student Tablets
+                    </option>
+
+                    <option value="Premium Tablets"
+                      {% if selected_subcategory == 'Premium Tablets' %}selected{% endif %}>
+                      Premium Tablets
+                    </option>
+                    <option value="Gaming Consoles"
+                     {% if selected_subcategory == 'Gaming Consoles' %}selected{% endif %}>
+                     Gaming Consoles
+                    </option>
+
+                    <option value="Gaming Keyboards"
+                     {% if selected_subcategory == 'Gaming Keyboards' %}selected{% endif %}>
+                     Gaming Keyboards
+                    </option>    
+
+                    <option value="Gaming Mouse"
+                     {% if selected_subcategory == 'Gaming Mouse' %}selected{% endif %}>
+                     Gaming Mouse
+                    </option>
+
+                    <option value="Gaming Headsets"
+                     {% if selected_subcategory == 'Gaming Headsets' %}selected{% endif %}>
+                     Gaming Headsets
+                    </option>
+
+                    <option value="Gaming Controllers"   
+                     {% if selected_subcategory == 'Gaming Controllers' %}selected{% endif %}>
+                     Gaming Controllers
+                    </option>
+                    <option value="Smartwatches"
+                     {% if selected_subcategory == 'Smartwatches' %}selected{% endif %}>
+                      Smartwatches
+                    </option>
+
+                    <option value="Fitness Bands"
+                     {% if selected_subcategory == 'Fitness Bands' %}selected{% endif %}>
+                     Fitness Bands
+                    </option>
+
+                    <option value="Smart Rings"
+                     {% if selected_subcategory == 'Smart Rings' %}selected{% endif %}>
+                      Smart Rings
+                    </option>
+
+                    <option value="GPS Watches"
+                     {% if selected_subcategory == 'GPS Watches' %}selected{% endif %}>
+                     GPS Watches
+                    </option>
+
+                    <option value="Premium Smartwatches"
+                     {% if selected_subcategory == 'Premium Smartwatches' %}selected{% endif %}>
+                      Premium Smartwatches
+                    </option>
+
+
+                </select>
+            </div>
+
+            <!-- PRICE RANGE -->
+
+            <div class="filter-group">
+                <h3><i class="bi bi-currency-rupee"></i> Price Range</h3>
+
+                <label class="filter-option">
+                    <input type="radio"
+                           name="price_range"
+                           value=""
+                           {% if not request.GET.price_range %}checked{% endif %}>
+                    Any Price
+                </label>
+
+                <label class="filter-option">
+                    <input type="radio"
+                           name="price_range"
+                           value="0-5000"
+                           {% if request.GET.price_range == '0-5000' %}checked{% endif %}>
+                    Under ₹5,000
+                </label>
+
+                <label class="filter-option">
+                    <input type="radio"
+                           name="price_range"
+                           value="5000-25000"
+                           {% if request.GET.price_range == '5000-25000' %}checked{% endif %}>
+                    ₹5,000 – ₹25,000
+                </label>
+
+                <label class="filter-option">
+                    <input type="radio"
+                           name="price_range"
+                           value="25000-75000"
+                           {% if request.GET.price_range == '25000-75000' %}checked{% endif %}>
+                    ₹25,000 – ₹75,000
+                </label>
+
+                <label class="filter-option">
+                    <input type="radio"
+                           name="price_range"
+                           value="75000-plus"
+                           {% if request.GET.price_range == '75000-plus' %}checked{% endif %}>
+                    Over ₹75,000
+                </label>
+            </div>
+
+            <!-- SORT -->
+
+            <div class="filter-group">
+                <h3><i class="bi bi-sort-down"></i> Sort By</h3>
+
+                <select name="sort" class="filter-select">
+
+                    <option value=""
+                        {% if not request.GET.sort %}selected{% endif %}>
+                        Newest First
+                    </option>
+
+                    <option value="price_low"
+                        {% if request.GET.sort == 'price_low' %}selected{% endif %}>
+                        Price: Low to High
+                    </option>
+
+                    <option value="price_high"
+                        {% if request.GET.sort == 'price_high' %}selected{% endif %}>
+                        Price: High to Low
+                    </option>
+
+                    <option value="name"
+                        {% if request.GET.sort == 'name' %}selected{% endif %}>
+                        Name: A to Z
+                    </option>
+
+                </select>
+            </div>
+
+            <button type="submit" class="apply-button">
+                <i class="bi bi-funnel"></i>
+                Apply Filters
+            </button>
+
+        </form>
+    </aside>
+
+    <!-- PRODUCTS SECTION -->
+
+    <section class="product-content">
+
+        <div class="products-heading">
+
+            <div>
+                <span class="heading-label">
+                    <i class="bi bi-stars"></i>
+                    EXPLORE OUR COLLECTION
+                </span>
+
+                <h1>
+                    Our Products
+                    <i class="bi bi-bag-check"></i>
+                </h1>
+
+                <p>
+                    Discover electronics and accessories for your everyday needs.
+                </p>
+            </div>
+
+            {% if user.is_authenticated and user.is_staff %}
+
+                <a href="{% url 'add_product' %}" class="add-product-btn">
+                    <i class="bi bi-plus-circle"></i>
+                    Add Product
+                </a>
+
+            {% endif %}
+
+            <button class="mobile-filter-button"
+                    type="button"
+                    onclick="toggleFilters()">
+
+                <i class="bi bi-sliders"></i>
+                Filters
+            </button>
+
+        </div>
+
+        <div class="product-grid">
+
+            {% for product in products %}
+
+                <article class="product-card"
+                         data-product-id="{{ product.id }}"
+                         data-product-name="{{ product.name|escape }}"
+                         data-product-price="{{ product.price }}"
+                         data-product-category="{{ product.category|escape }}"
+                         data-product-subcategory="{{ product.subcategory|default:''|escape }}"
+                         data-product-description="{{ product.description|truncatewords:10|escape }}"
+                         data-product-image="{% if product.image %}{{ product.image.url }}{% endif %}"
+                         data-product-detail="{% url 'product_detail' product.id %}">
+
+                    <!-- FAVOURITE BUTTON -->
+
+                    <button type="button"
+                            class="favorite-button"
+                            aria-label="Add {{ product.name }} to favourites"
+                            aria-pressed="false"
+                            onclick="toggleFavorite(this)">
+
+                        <i class="bi bi-heart"></i>
+                    </button>
+
+                    <!-- PRODUCT IMAGE -->
+
+                    <div class="product-image">
+
+                        {% if product.image %}
+
+                            <img src="{{ product.image.url }}"
+                                 alt="{{ product.name }}"
+                                 loading="lazy">
+
+                        {% else %}
+
+                            <i class="bi bi-box-seam image-placeholder"></i>
+
+                        {% endif %}
+
+                    </div>
+
+                    <!-- PRODUCT INFORMATION -->
+
+                    <div class="product-details">
+
+                        <h2 class="product-name">
+                            {{ product.name }}
+                        </h2>
+
+                        <div class="rating">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star"></i>
+                            <span>Rating not available</span>
+                        </div>
+
+                        <div class="product-category">
+                            <i class="bi bi-tag"></i>
+
+                            {{ product.get_category_display|default:product.category }}
+
+                            {% if product.subcategory %}
+                                · {{ product.subcategory }}
+                            {% endif %}
+                        </div>
+
+                        <div class="product-description">
+                            {{ product.description|truncatewords:10 }}
+                        </div>
+
+                        <div class="product-price">
+                            ₹{{ product.price|floatformat:2 }}
+                        </div>
+
+                        <!-- VIEW PRODUCT -->
+
+                        <a href="{% url 'product_detail' product.id %}"
+                           class="view-button">
+
+                            <i class="bi bi-eye"></i>
+                            View Product
+                        </a>
+
+                        <!-- ADD TO CART -->
+
+                        {% if user.is_authenticated %}
+
+                            <form method="post"
+                                  action="{% url 'add_to_cart' product.id %}"
+                                  class="add-to-cart-form">
+
+                                {% csrf_token %}
+
+                                <button type="submit"
+                                        class="add-to-cart-button">
+
+                                    <i class="bi bi-cart-plus"></i>
+                                    Add to Cart
+                                </button>
+
+                            </form>
+
+                        {% else %}
+
+                            <a href="{% url 'login' %}"
+                               class="add-to-cart-button"
+                               style="margin-top:10px;">
+
+                                <i class="bi bi-box-arrow-in-right"></i>
+                                Login to Purchase
+                            </a>
+
+                        {% endif %}
+
+                       <!-- ADMIN ACTIONS -->
+
+{% if user.is_authenticated and user.is_staff %}
+
+    <div class="admin-actions">
+
+        <!-- EDIT BUTTON -->
+        <a href="{% url 'edit_product' product.id %}"
+           class="edit-button">
+
+            <i class="bi bi-pencil-square"></i>
+            Edit
+
+        </a>
+
+        <!-- DELETE BUTTON -->
+        <form method="POST"
+              action="{% url 'delete_product' product.id %}"
+              onsubmit="return confirm('Are you sure you want to delete this product?');"
+              style="display: inline;">
+
+            {% csrf_token %}
+
+            <button type="submit" class="delete-button">
+
+                <i class="bi bi-trash"></i>
+                Delete
+
+            </button>
+
+        </form>
+
+    </div>
+
+{% endif %}
+
+                    </div>
+
+                </article>
+
+            {% empty %}
+
+                <div class="empty-state">
+
+                    <i class="bi bi-search"></i>
+
+                    <h2>No products found</h2>
+
+                    <p>
+                        No products match your current selection.
+                        Try changing your filters or view all products.
+                    </p>
+
+                    <a href="{% url 'products' %}"
+                       class="apply-button"
+                       style="width:auto;padding:12px 22px;">
+
+                        <i class="bi bi-grid"></i>
+                        View All Products
+                    </a>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    <p>
+        © {% now "Y" %}
+        <strong>MiniCatalogue</strong>.
+        All rights reserved.
+    </p>
+</footer>
+
+<script>
+    /*
+     * FAVOURITES
+     *
+     * This version stores favourites in the browser's localStorage.
+     * The favourites page must read the same storage key.
+     */
+
+    const FAVORITES_KEY = "miniCatalogueFavorites";
+
+    function getFavorites() {
+        try {
+            const saved = JSON.parse(
+                localStorage.getItem(FAVORITES_KEY) || "[]"
+            );
+
+            return Array.isArray(saved) ? saved : [];
+
+        } catch (error) {
+            return [];
+        }
+    }
+
+    function saveFavorites(favorites) {
+        localStorage.setItem(
+            FAVORITES_KEY,
+            JSON.stringify(favorites)
+        );
+    }
+
+    function updateFavoriteCount() {
+        const countElement =
+            document.getElementById("favoriteCount");
+
+        if (countElement) {
+            countElement.textContent = getFavorites().length;
+        }
+    }
+
+    function updateFavoriteButtons() {
+        const favorites = getFavorites();
+
+        document.querySelectorAll(".product-card").forEach(card => {
+
+            const button =
+                card.querySelector(".favorite-button");
+
+            const icon = button.querySelector("i");
+
+            const productId = String(card.dataset.productId);
+
+            const isFavorite = favorites.some(
+                item => String(item.id) === productId
+            );
+
+            button.classList.toggle("active", isFavorite);
+
+            button.setAttribute(
+                "aria-pressed",
+                isFavorite ? "true" : "false"
+            );
+
+            button.setAttribute(
+                "aria-label",
+                isFavorite
+                    ? "Remove " + card.dataset.productName + " from favourites"
+                    : "Add " + card.dataset.productName + " to favourites"
+            );
+
+            icon.classList.toggle(
+                "bi-heart-fill",
+                isFavorite
+            );
+
+            icon.classList.toggle(
+                "bi-heart",
+                !isFavorite
+            );
+
+        });
+
+        updateFavoriteCount();
+    }
+
+    function toggleFavorite(button) {
+
+        const card = button.closest(".product-card");
+
+        const productId = String(card.dataset.productId);
+
+        let favorites = getFavorites();
+
+        const existingIndex = favorites.findIndex(
+            item => String(item.id) === productId
+        );
+
+        if (existingIndex !== -1) {
+
+            // Remove from favourites
+            favorites.splice(existingIndex, 1);
+
+        } else {
+
+            // Add to favourites
+            favorites.push({
+                id: productId,
+                name: card.dataset.productName,
+                price: card.dataset.productPrice,
+                category: card.dataset.productCategory,
+                subcategory: card.dataset.productSubcategory,
+                description: card.dataset.productDescription,
+                image: card.dataset.productImage,
+                detailUrl: card.dataset.productDetail
+            });
+
+        }
+
+        saveFavorites(favorites);
+
+        updateFavoriteButtons();
+    }
+
+    /*
+     * MOBILE FILTER
+     */
+
+    function toggleFilters() {
+
+        document.getElementById("filterPanel")
+            .classList.toggle("collapsed");
+
+    }
+
+    /*
+     * INITIALIZE FAVOURITES
+     */
+
+    document.addEventListener("DOMContentLoaded", function () {
+        updateFavoriteButtons();
+    });
+
+    /*
+     * UPDATE WHEN FAVOURITES CHANGE IN ANOTHER TAB
+     */
+
+    window.addEventListener("storage", function (event) {
+
+        if (event.key === FAVORITES_KEY) {
+            updateFavoriteButtons();
+        }
+
+    });
+</script>
+
+</body>
+</html>

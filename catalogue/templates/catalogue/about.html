@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>About | Mini Product Catalogue</title>
+
+    <style>
+        /* =========================
+           GENERAL STYLES
+        ========================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --orange: #f5660a;
+            --orange-dark: #d94d00;
+            --brown: #28160f;
+            --cream: #faf6ef;
+            --white: #ffffff;
+            --text: #333333;
+            --muted: #777777;
+            --border: #f0dfd0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--cream);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* =========================
+           ANIMATION KEYFRAMES
+        ========================= */
+
+        @keyframes fadeDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes gradientMove {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes floating {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(245, 102, 10, 0.15);
+            }
+
+            50% {
+                box-shadow: 0 0 0 10px rgba(245, 102, 10, 0);
+            }
+        }
+
+        /* =========================
+           NAVIGATION BAR
+        ========================= */
+
+        .navbar {
+            min-height: 75px;
+            background: #222222;
+            padding: 16px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 25px;
+            animation: fadeDown 0.7s ease both;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            color: white;
+            white-space: nowrap;
+        }
+
+        .logo span {
+            color: #ff8744;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .nav-links a {
+            color: white;
+            font-size: 15px;
+            transition: color 0.3s ease,
+                        transform 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #ff8744;
+            transform: translateY(-3px);
+        }
+
+        .nav-links a.active {
+            color: #ff8744;
+            font-weight: bold;
+        }
+
+        .login-btn {
+            border: 1px solid #ff8744;
+            padding: 8px 18px;
+            border-radius: 7px;
+        }
+
+        .login-btn:hover {
+            background: var(--orange);
+            color: white !important;
+        }
+
+        /* =========================
+           HERO SECTION
+        ========================= */
+
+        .hero {
+            text-align: center;
+            padding: 75px 20px 65px;
+
+            background: linear-gradient(
+                -45deg,
+                #fff0e3,
+                #ffe0c5,
+                #fff7ef,
+                #ffd5b5
+            );
+
+            background-size: 400% 400%;
+            animation: gradientMove 10s ease infinite;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            background: white;
+            color: var(--orange-dark);
+            border: 1px solid #ffd0ad;
+            padding: 7px 18px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            animation: fadeDown 0.8s ease both;
+        }
+
+        .hero h1 {
+            font-size: 46px;
+            color: var(--brown);
+            margin-bottom: 16px;
+            animation: fadeUp 0.9s ease both;
+        }
+
+        .hero h1 span {
+            color: var(--orange);
+        }
+
+        .hero p {
+            max-width: 720px;
+            margin: auto;
+            font-size: 16px;
+            color: #66564d;
+            animation: fadeUp 1.2s ease both;
+        }
+
+        /* =========================
+           MAIN CONTAINER
+        ========================= */
+
+        .container {
+            max-width: 1150px;
+            margin: auto;
+            padding: 50px 25px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 32px;
+            color: var(--brown);
+            margin-bottom: 12px;
+        }
+
+        .section-title span {
+            color: var(--orange);
+        }
+
+        .section-description {
+            text-align: center;
+            max-width: 680px;
+            margin: 0 auto 35px;
+            color: var(--muted);
+            font-size: 15px;
+        }
+
+        /* =========================
+           INTRODUCTION CARD
+        ========================= */
+
+        .intro-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 35px;
+
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 35px;
+            align-items: center;
+
+            box-shadow: 0 5px 20px rgba(40, 22, 15, 0.05);
+
+            margin-bottom: 55px;
+
+            animation: fadeUp 1s ease both;
+
+            transition: box-shadow 0.3s ease,
+                        transform 0.3s ease;
+        }
+
+        .intro-card:hover {
+            box-shadow: 0 12px 30px rgba(40, 22, 15, 0.09);
+            transform: translateY(-3px);
+        }
+
+        .intro-content h2 {
+            font-size: 29px;
+            color: var(--brown);
+            margin-bottom: 18px;
+        }
+
+        .intro-content h2 span {
+            color: var(--orange);
+        }
+
+        .intro-content p {
+            font-size: 15px;
+            color: #666666;
+            margin-bottom: 15px;
+        }
+
+        .intro-visual {
+            min-height: 270px;
+
+            background: linear-gradient(
+                135deg,
+                #fff0e3,
+                #ffd5b5
+            );
+
+            border-radius: 16px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+
+            text-align: center;
+            padding: 25px;
+
+            transition: transform 0.3s ease;
+        }
+
+        .intro-visual:hover {
+            transform: scale(1.02);
+        }
+
+        .intro-visual .big-icon {
+            font-size: 85px;
+            margin-bottom: 12px;
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        .intro-visual h3 {
+            color: var(--brown);
+            font-size: 23px;
+            margin-bottom: 5px;
+        }
+
+        .intro-visual p {
+            color: #775747;
+            font-size: 14px;
+        }
+
+        /* =========================
+           FEATURES SECTION
+        ========================= */
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px;
+            margin-top: 30px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 27px 23px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+
+            opacity: 0;
+            animation: fadeUp 0.7s ease forwards;
+
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease,
+                border-color 0.3s ease;
+        }
+
+        .feature-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .feature-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .feature-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .feature-card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .feature-card:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        .feature-card:nth-child(6) {
+            animation-delay: 0.6s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-9px);
+            box-shadow: 0 15px 30px rgba(40, 22, 15, 0.12);
+            border-color: var(--orange);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 15px;
+            background: #fff0e3;
+            font-size: 29px;
+            margin-bottom: 18px;
+
+            transition:
+                transform 0.35s ease,
+                background 0.35s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: rotate(-8deg) scale(1.12);
+            background: #ffe0c5;
+        }
+
+        .feature-card h3 {
+            font-size: 19px;
+            color: var(--brown);
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        /* =========================
+           TECHNOLOGY SECTION
+        ========================= */
+
+        .technology {
+            margin-top: 55px;
+            background: white;
+            padding: 35px;
+            border-radius: 17px;
+            border: 1px solid var(--border);
+            text-align: center;
+
+            animation: fadeIn 1.2s ease both;
+        }
+
+        .technology h2 {
+            color: var(--brown);
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .technology p {
+            color: var(--muted);
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .tech-list {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .tech-item {
+            display: inline-block;
+            background: #fff0e3;
+            color: var(--orange-dark);
+            padding: 11px 21px;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: bold;
+            border: 1px solid #ffdcc5;
+
+            transition:
+                transform 0.3s ease,
+                background 0.3s ease,
+                color 0.3s ease;
+        }
+
+        .tech-item:hover {
+            transform: translateY(-6px) scale(1.04);
+            background: var(--orange);
+            color: white;
+        }
+
+        /* =========================
+           CALL TO ACTION
+        ========================= */
+
+        .cta {
+            margin-top: 45px;
+            padding: 45px 25px;
+
+            background: linear-gradient(
+                135deg,
+                #392116,
+                #5a3020
+            );
+
+            border-radius: 18px;
+            text-align: center;
+            color: white;
+
+            animation: fadeUp 1s ease both;
+        }
+
+        .cta h2 {
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        .cta p {
+            color: #f0d9cb;
+            font-size: 15px;
+            margin-bottom: 25px;
+        }
+
+        .shop-btn {
+            display: inline-block;
+            background: var(--orange);
+            color: white;
+            padding: 13px 27px;
+            border-radius: 9px;
+            font-weight: bold;
+
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease,
+                background 0.3s ease;
+        }
+
+        .shop-btn:hover {
+            background: var(--orange-dark);
+            transform: translateY(-4px) scale(1.04);
+            box-shadow: 0 9px 23px rgba(245, 102, 10, 0.35);
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .footer {
+            margin-top: 30px;
+            background: #222222;
+            color: white;
+            text-align: center;
+            padding: 25px 15px;
+        }
+
+        .footer p {
+            font-size: 13px;
+            color: #cccccc;
+            margin: 4px 0;
+        }
+
+        .footer span {
+            color: #ff8744;
+        }
+
+        /* =========================
+           SCROLL REVEAL
+        ========================= */
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition:
+                opacity 0.8s ease,
+                transform 0.8s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* =========================
+           RESPONSIVE DESIGN
+        ========================= */
+
+        @media (max-width: 850px) {
+            .navbar {
+                flex-wrap: wrap;
+                padding: 16px 5%;
+            }
+
+            .intro-card {
+                grid-template-columns: 1fr;
+                padding: 25px;
+            }
+
+            .features {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .hero h1 {
+                font-size: 38px;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .navbar {
+                justify-content: center;
+                gap: 15px;
+            }
+
+            .logo {
+                font-size: 22px;
+            }
+
+            .nav-links {
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 14px;
+            }
+
+            .nav-links a {
+                font-size: 13px;
+            }
+
+            .hero {
+                padding: 48px 16px;
+            }
+
+            .hero h1 {
+                font-size: 30px;
+            }
+
+            .hero p {
+                font-size: 14px;
+            }
+
+            .container {
+                padding: 30px 15px;
+            }
+
+            .section-title {
+                font-size: 26px;
+            }
+
+            .intro-card {
+                padding: 20px;
+                gap: 20px;
+            }
+
+            .intro-content h2 {
+                font-size: 24px;
+            }
+
+            .intro-visual {
+                min-height: 220px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .technology {
+                padding: 25px 15px;
+            }
+
+            .technology h2 {
+                font-size: 24px;
+            }
+
+            .cta {
+                padding: 35px 18px;
+            }
+
+            .cta h2 {
+                font-size: 24px;
+            }
+        }
+
+        /* Respect the visitor's reduced-motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation: none !important;
+                transition: none !important;
+                scroll-behavior: auto !important;
+            }
+
+            .reveal {
+                opacity: 1;
+                transform: none;
+            }
+
+            .feature-card {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVIGATION BAR -->
+
+    <header class="navbar">
+
+        <a href="{% url 'home' %}" class="logo">
+            Mini<span>Catalogue</span>
+        </a>
+
+        <nav class="nav-links">
+
+            <a href="{% url 'home' %}">Home</a>
+
+            <a href="{% url 'products' %}">Products</a>
+
+            <a href="{% url 'about' %}" class="active">About</a>
+
+            <a href="{% url 'login' %}" class="login-btn">Login</a>
+
+        </nav>
+
+    </header>
+
+    <!-- HERO SECTION -->
+
+    <section class="hero">
+
+        <span class="hero-tag">ABOUT OUR PROJECT</span>
+
+        <h1>About <span>Mini Catalogue</span></h1>
+
+        <p>
+            A simple and user-friendly product management website
+            developed using Python and Django to help users explore
+            and manage products in one place.
+        </p>
+
+    </section>
+
+    <!-- MAIN CONTENT -->
+
+    <main class="container">
+
+        <!-- INTRODUCTION -->
+
+        <section class="intro-card reveal">
+
+            <div class="intro-content">
+
+                <h2>Welcome to <span>Mini Catalogue</span></h2>
+
+                <p>
+                    Mini Product Catalogue is a web-based application
+                    developed using Python and the Django framework.
+                    It provides an organized way to display and manage
+                    different products.
+                </p>
+
+                <p>
+                    Products can include smartphones, laptops,
+                    headphones, and other electronic items. Each
+                    product can contain a name, category, price,
+                    description, stock information, and image.
+                </p>
+
+                <p>
+                    Our goal is to provide a simple interface that
+                    makes browsing and managing product information
+                    convenient for users.
+                </p>
+
+            </div>
+
+            <div class="intro-visual">
+
+                <div class="big-icon">🛍️</div>
+
+                <h3>Explore Products</h3>
+
+                <p>
+                    Discover products in one organized catalogue.
+                </p>
+
+            </div>
+
+        </section>
+
+        <!-- FEATURES -->
+
+        <section class="reveal">
+
+            <h2 class="section-title">
+                Our <span>Features</span>
+            </h2>
+
+            <p class="section-description">
+                Useful features designed to make product browsing
+                and catalogue management simple.
+            </p>
+
+            <div class="features">
+
+                <article class="feature-card">
+
+                    <div class="feature-icon">🛍️</div>
+
+                    <h3>Product Catalogue</h3>
+
+                    <p>
+                        Browse different products and view their
+                        details in an organized layout.
+                    </p>
+
+                </article>
+
+                <article class="feature-card">
+
+                    <div class="feature-icon">🖼️</div>
+
+                    <h3>Product Images</h3>
+
+                    <p>
+                        View product images to identify and understand
+                        the available products.
+                    </p>
+
+                </article>
+
+                <article class="feature-card">
+
+                    <div class="feature-icon">💰</div>
+
+                    <h3>Price and Details</h3>
+
+                    <p>
+                        View product prices, categories, descriptions,
+                        and other available information.
+                    </p>
+
+                </article>
+
+                <article class="feature-card">
+
+                    <div class="feature-icon">➕</div>
+
+                    <h3>Add Products</h3>
+
+                    <p>
+                        Authorized users can add new products to
+                        the catalogue.
+                    </p>
+
+                </article>
+
+                <article class="feature-card">
+
+                    <div class="feature-icon">✏️</div>
+
+                    <h3>Edit Products</h3>
+
+                    <p>
+                        Update existing product information whenever
+                        changes are required.
+                    </p>
+
+                </article>
+
+                <article class="feature-card">
+
+                    <div class="feature-icon">🔐</div>
+
+                    <h3>User Authentication</h3>
+
+                    <p>
+                        User login helps restrict access to features
+                        that require authentication.
+                    </p>
+
+                </article>
+
+            </div>
+
+        </section>
+
+        <!-- TECHNOLOGY SECTION -->
+
+        <section class="technology reveal">
+
+            <h2>Technologies Used</h2>
+
+            <p>
+                The main technologies used to develop this project.
+            </p>
+
+            <div class="tech-list">
+
+                <span class="tech-item">Python</span>
+
+                <span class="tech-item">Django</span>
+
+                <span class="tech-item">HTML5</span>
+
+                <span class="tech-item">CSS3</span>
+
+                <span class="tech-item">JavaScript</span>
+
+                <span class="tech-item">SQLite</span>
+
+            </div>
+
+        </section>
+
+        <!-- CALL TO ACTION -->
+
+        <section class="cta reveal">
+
+            <h2>Ready to Explore Products?</h2>
+
+            <p>
+                Visit our catalogue to browse available products
+                and discover their details.
+            </p>
+
+            <a href="{% url 'products' %}" class="shop-btn">
+                🛍️ Explore Products
+            </a>
+
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+
+    <footer class="footer">
+
+        <p>
+            © 2026 <span>Mini Catalogue</span>.
+            All rights reserved.
+        </p>
+
+        <p>Developed using Python and Django.</p>
+
+    </footer>
+
+    <!-- SCROLL ANIMATION JAVASCRIPT -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const sections = document.querySelectorAll(".reveal");
+
+            /* Show sections when they enter the screen */
+
+            if ("IntersectionObserver" in window) {
+
+                const observer = new IntersectionObserver(
+                    function (entries, observer) {
+
+                        entries.forEach(function (entry) {
+
+                            if (entry.isIntersecting) {
+
+                                entry.target.classList.add("visible");
+
+                                observer.unobserve(entry.target);
+
+                            }
+
+                        });
+
+                    },
+                    {
+                        threshold: 0.12
+                    }
+                );
+
+                sections.forEach(function (section) {
+                    observer.observe(section);
+                });
+
+            } else {
+
+                /* Fallback for older browsers */
+
+                sections.forEach(function (section) {
+                    section.classList.add("visible");
+                });
+
+            }
+
+        });
+    </script>
+
+</body>
+</html>
